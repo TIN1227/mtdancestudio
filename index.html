@@ -12,12 +12,11 @@
         }
         body { 
             background: var(--bg-dark); color: white; display: flex; 
-            justify-content: center; padding: 40px 20px; 
+            justify-content: center; padding: 50px 20px; 
             font-family: 'Noto Sans TC', sans-serif; min-height: 100vh;
         }
         .container { width: 100%; max-width: 450px; text-align: center; }
         
-        /* LOGO */
         .logo-main { 
             font-size: 72px; font-weight: 900; 
             background: linear-gradient(to right, #ffffff, var(--neon-cyan));
@@ -26,26 +25,26 @@
         .logo-sub { font-size: 20px; color: var(--neon-pink); letter-spacing: 6px; margin-bottom: 40px; font-weight: 700; }
         h2 { font-size: 22px; color: #fff; margin-bottom: 40px; font-weight: 400; }
 
-        /* 輸入框與按鈕 (調整 margin 解決擁擠) */
+        /* 這裡調整間距：加大 margin 讓輸入框不再擁擠 */
         input { 
-            width: 100%; padding: 20px; margin: 15px 0; border-radius: 12px; 
+            width: 100%; padding: 22px; margin: 25px 0; border-radius: 15px; 
             border: 1px solid #333; background: #172a45; color: white; 
-            font-size: 18px; text-align: center; box-sizing: border-box;
+            font-size: 20px; text-align: center; box-sizing: border-box;
         }
         button { 
-            width: 100%; padding: 20px; margin-top: 30px; 
+            width: 100%; padding: 22px; margin-top: 30px; 
             background: var(--neon-cyan); color: #000; border: none; 
-            border-radius: 12px; font-weight: bold; font-size: 20px; cursor: pointer; 
+            border-radius: 15px; font-weight: bold; font-size: 22px; cursor: pointer; 
         }
 
-        /* 查詢結果區 (初始完全隱藏) */
+        /* 強制初始隱藏 */
         #result { 
-            margin-top: 50px; padding: 35px; border: 2px solid var(--neon-cyan); 
-            border-radius: 20px; display: none; background: rgba(255,255,255,0.05);
+            margin-top: 60px; padding: 40px; border: 2px solid var(--neon-cyan); 
+            border-radius: 20px; display: none !important; background: rgba(255,255,255,0.05);
         }
-        .result-label { font-size: 20px; margin: 15px 0; color: #cbd5e1; }
-        .count-val { font-size: 64px; color: var(--neon-cyan); font-weight: 900; margin: 10px 0; display: block; text-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
-        .date-val { color: var(--neon-pink); font-weight: bold; font-size: 24px; }
+        .result-label { font-size: 22px; margin: 20px 0; color: #cbd5e1; }
+        .count-val { font-size: 72px; color: var(--neon-cyan); font-weight: 900; margin: 20px 0; display: block; }
+        .date-val { color: var(--neon-pink); font-weight: bold; font-size: 30px; }
     </style>
 </head>
 <body>
@@ -57,7 +56,7 @@
 
     <input type="text" id="name" placeholder="請輸入姓名">
     <input type="number" id="phone" placeholder="請輸入手機末三碼">
-    <button id="btn" onclick="query()">查詢剩餘課程</button>
+    <button id="btn" onclick="query()">查詢</button>
 
     <div id="result">
         <div class="result-label">剩餘堂數</div>
@@ -98,6 +97,7 @@
             const data = await sendJsonpRequest(url, "jsonp_" + Date.now());
 
             if (data.status === "success") {
+                // 這裡動態更改 style，覆蓋掉 CSS 的 display:none
                 resultDiv.style.display = 'block';
                 document.getElementById('count').innerText = data.remaining;
                 document.getElementById('date').innerText = data.expiry;
@@ -106,7 +106,7 @@
                 alert("查無資料，請再確認姓名與手機末三碼");
             }
         } catch (err) {
-            alert("伺服器連線異常，請稍後再試");
+            alert("伺服器連線異常");
         } finally {
             btn.innerText = "查詢剩餘課程";
             btn.disabled = false;
