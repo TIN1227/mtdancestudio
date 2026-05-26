@@ -12,7 +12,7 @@
         }
         body { 
             background: var(--bg-dark); color: white; display: flex; 
-            justify-content: center; padding: 25px; 
+            justify-content: center; padding: 30px 20px; 
             font-family: 'Noto Sans TC', sans-serif; min-height: 100vh;
         }
         .container { width: 100%; max-width: 450px; text-align: center; }
@@ -24,23 +24,23 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .logo-sub { font-size: 20px; color: var(--neon-pink); letter-spacing: 6px; margin-bottom: 40px; font-weight: 700; }
-        h2 { font-size: 22px; color: #fff; margin-bottom: 25px; font-weight: 400; }
+        h2 { font-size: 22px; color: #fff; margin-bottom: 30px; font-weight: 400; }
 
-        /* 輸入框與按鈕 */
-        input { 
-            width: 100%; padding: 18px; margin: 10px 0; border-radius: 12px; 
+        /* 擴大間距的輸入框與按鈕 */
+        .input-box { 
+            width: 100%; padding: 20px; margin: 15px 0; border-radius: 12px; 
             border: 1px solid #333; background: #172a45; color: white; 
             font-size: 18px; text-align: center; box-sizing: border-box;
         }
         button { 
-            width: 100%; padding: 20px; margin-top: 20px; 
+            width: 100%; padding: 22px; margin-top: 25px; 
             background: var(--neon-cyan); color: #000; border: none; 
             border-radius: 12px; font-weight: bold; font-size: 20px; cursor: pointer; 
         }
 
-        /* 查詢結果區 (初始隱藏) */
+        /* 查詢結果區 (強制隱藏) */
         #result { 
-            margin-top: 40px; padding: 30px; border: 2px solid var(--neon-cyan); 
+            margin-top: 50px; padding: 35px; border: 2px solid var(--neon-cyan); 
             border-radius: 20px; display: none; background: rgba(255,255,255,0.05);
         }
         .result-label { font-size: 20px; margin: 15px 0; color: #cbd5e1; }
@@ -55,8 +55,8 @@
     <div class="logo-sub">DANCE STUDIO</div>
     <h2>剩餘堂數查詢系統</h2>
 
-    <input type="text" id="name" placeholder="請輸入姓名">
-    <input type="number" id="phone" placeholder="請輸入手機末三碼">
+    <input type="text" id="name" class="input-box" placeholder="請輸入姓名">
+    <input type="number" id="phone" class="input-box" placeholder="請輸入手機末三碼">
     <button id="btn" onclick="query()">查詢</button>
 
     <div id="result">
@@ -67,8 +67,7 @@
 </div>
 
 <script>
-    // 1. 請填入您 GAS 的網址
-    const GAS_API_URL = "您的_GAS_WEB_APP_URL"; 
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec"; 
 
     function sendJsonpRequest(url, callbackName) {
         return new Promise((resolve) => {
@@ -99,6 +98,7 @@
             const data = await sendJsonpRequest(url, "jsonp_" + Date.now());
 
             if (data.status === "success") {
+                // 成功時才會改為 block，CSS 的 display:none 才會被覆蓋
                 resultDiv.style.display = 'block';
                 document.getElementById('count').innerText = data.remaining;
                 document.getElementById('date').innerText = data.expiry;
