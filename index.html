@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MT DANCE STUDIO | 系統</title>
+    <title>MT DANCE STUDIO</title>
     <style>
         :root {
             --neon-cyan: #00f0ff;
@@ -12,108 +12,25 @@
         }
         body { 
             background: var(--bg-dark); color: white; display: flex; 
-            justify-content: center; padding: 60px 20px; 
+            justify-content: center; padding: 40px 20px; 
             font-family: 'Noto Sans TC', sans-serif; min-height: 100vh;
         }
         .container { width: 100%; max-width: 450px; text-align: center; }
         
-        .logo-main { 
-            font-size: 80px; font-weight: 900; 
-            background: linear-gradient(to right, #ffffff, var(--neon-cyan));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .logo-sub { font-size: 20px; color: var(--neon-pink); letter-spacing: 8px; margin-bottom: 50px; font-weight: 700; }
-        h2 { font-size: 24px; color: #fff; margin-bottom: 50px; font-weight: 400; }
-
-        /* 輸入框與按鈕的間距調整 */
+        .logo-main { font-size: 72px; font-weight: 900; background: linear-gradient(to right, #ffffff, var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-sub { font-size: 20px; color: var(--neon-pink); letter-spacing: 6px; margin-bottom: 30px; font-weight: 700; }
+        
+        /* 調整間距解決擁擠：增加 margin */
         input { 
-            width: 100%; padding: 22px; margin: 25px 0; border-radius: 15px; 
-            border: 1px solid #444; background: #172a45; color: white; 
-            font-size: 20px; text-align: center; box-sizing: border-box;
+            width: 100%; padding: 18px; margin: 15px 0; border-radius: 12px; 
+            border: 1px solid #333; background: #172a45; color: white; 
+            font-size: 18px; text-align: center; box-sizing: border-box;
         }
         button { 
-            width: 100%; padding: 22px; margin-top: 40px; 
+            width: 100%; padding: 18px; margin-top: 25px; 
             background: var(--neon-cyan); color: #000; border: none; 
-            border-radius: 15px; font-weight: bold; font-size: 22px; cursor: pointer; 
+            border-radius: 12px; font-weight: bold; font-size: 20px; cursor: pointer; 
         }
 
-        /* 查詢結果初始狀態 */
-        #result { 
-            margin-top: 60px; padding: 40px; border: 2px solid var(--neon-cyan); 
-            border-radius: 20px; display: none !important; visibility: hidden; 
-            background: rgba(255,255,255,0.05);
-        }
-        .result-label { font-size: 20px; margin: 20px 0; color: #cbd5e1; }
-        .count-val { font-size: 72px; color: var(--neon-cyan); font-weight: 900; margin: 10px 0; display: block; }
-        .date-val { color: var(--neon-pink); font-weight: bold; font-size: 32px; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="logo-main">MT</div>
-    <div class="logo-sub">DANCE STUDIO</div>
-    <h2>剩餘堂數查詢系統</h2>
-
-    <input type="text" id="name" placeholder="請輸入姓名">
-    <input type="number" id="phone" placeholder="請輸入手機末三碼">
-    <button id="btn" onclick="query()">查詢剩餘課程</button>
-
-    <div id="result">
-        <div class="result-label">剩餘堂數</div>
-        <div id="count" class="count-val"></div>
-        <div class="result-label">到期日期：<span id="date" class="date-val"></span></div>
-    </div>
-</div>
-
-<script>
-    const GAS_API_URL = "您的_GAS_WEB_APP_URL"; 
-
-    function sendJsonpRequest(url, callbackName) {
-        return new Promise((resolve) => {
-            window[callbackName] = (data) => {
-                delete window[callbackName];
-                document.body.removeChild(script);
-                resolve(data);
-            };
-            const script = document.createElement('script');
-            script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
-            document.body.appendChild(script);
-        });
-    }
-
-    async function query() {
-        const btn = document.getElementById('btn');
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-        const resultDiv = document.getElementById('result');
-
-        if (!name || !phone) { alert("請完整輸入姓名與手機末三碼"); return; }
-
-        btn.innerText = "查詢中...";
-        btn.disabled = true;
-
-        try {
-            const url = `${GAS_API_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
-            const data = await sendJsonpRequest(url, "jsonp_" + Date.now());
-
-            if (data.status === "success") {
-                // 這裡觸發顯示
-                resultDiv.style.display = 'block !important';
-                resultDiv.style.visibility = 'visible';
-                document.getElementById('count').innerText = data.remaining;
-                document.getElementById('date').innerText = data.expiry;
-            } else {
-                resultDiv.style.display = 'none';
-                alert("查無資料，請再確認姓名與手機末三碼");
-            }
-        } catch (err) {
-            alert("伺服器連線異常");
-        } finally {
-            btn.innerText = "查詢剩餘課程";
-            btn.disabled = false;
-        }
-    }
-</script>
-</body>
-</html>
+        /* 查詢結果樣式 */
+        #result { margin-top: 40
