@@ -90,36 +90,140 @@
             color: #cbd5e1;
             font-weight: 400;
         }
-        input { 
-            width: 100%; 
-            padding: 18px; 
-            margin: 10px 0; 
-            background: rgba(15, 23, 42, 0.6); 
-            border: 2px solid #1e293b; 
-            border-radius: 12px; 
-            color: #fff; 
-            font-size: 18px; 
-            outline: none; 
-            box-sizing: border-box; 
+
+        /* 表單與輸入框樣式 */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+            position: relative;
         }
-        
-        button { 
-            width: 100%; 
-            padding: 18px; 
-            margin-top: 20px; 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 18px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            background: linear-gradient(45deg, #0056b3, var(--neon-cyan)); 
-            color: white; 
-            transition: 0.3s; 
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
-        
-        #result { display: none; margin-top: 30px; border: 1px dashed var(--neon-cyan); padding: 20px; border-radius: 16px; text-align: left; }
-        .info { font-size: 16px; margin: 10px 0; }
-        .val { font-size: 28px; font-weight: 900; color: var(--neon-cyan); display: block; }
+        .input-wrapper {
+            position: relative;
+        }
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        input, select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid #1e293b;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        input:focus + i, select:focus ~ i {
+            color: var(--neon-cyan);
+        }
+
+        /* 按鈕樣式 */
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-query {
+            background: linear-gradient(45deg, #0056b3, var(--primary-blue));
+            color: white;
+            margin-top: 10px;
+        }
+        .btn-query:hover {
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        .btn-checkin {
+            background: linear-gradient(45deg, #d81b60, var(--neon-pink));
+            color: white;
+            margin-top: 15px;
+        }
+        .btn-checkin:hover {
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* 查詢結果面板（動態顯示） */
+        .result-panel {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px dashed var(--neon-cyan);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 25px 0;
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .student-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .student-count {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .count-number {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            margin: 5px 5px 0 5px;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        /* 載入中動畫 */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* 遮罩/提示訊息 */
+        .overlay-msg {
+            color: var(--neon-pink);
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
