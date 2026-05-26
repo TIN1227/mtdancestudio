@@ -121,31 +121,27 @@
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec"; 
 
     async function query() {
-        const btn = document.getElementById('btn');
-        const resDiv = document.getElementById('result');
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-
-        if(!name || !phone) { alert("請填寫完整資料"); return; }
-
-        btn.innerText = "查詢中...";
-        try {
-            // 注意：跨網域請求需確保 GAS 端有處理回應
-            const response = await fetch(GAS_URL, {
-                method: "POST",
-                body: JSON.stringify({ name, phone })
-            });
-            const data = await response.json();
-            
-            document.getElementById('count').innerText = data.remaining;
-            document.getElementById('date').innerText = data.expiry;
-            resDiv.style.display = "block";
-        } catch(e) {
-            alert("查詢失敗，請檢查網路或系統設定");
-        } finally {
-            btn.innerText = "查詢剩餘課程";
-        }
+    const btn = document.getElementById('btn');
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    
+    // 將參數透過 URL 傳遞，避開 POST 的跨域限制
+    const url = `${GAS_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
+    
+    btn.innerText = "查詢中...";
+    try {
+        const response = await fetch(url); // 改用 GET
+        const data = await response.json();
+        
+        document.getElementById('count').innerText = data.remaining;
+        document.getElementById('date').innerText = data.expiry;
+        document.getElementById('result').style.display = "block";
+    } catch(e) {
+        alert("查詢失敗，請檢查網路");
+    } finally {
+        btn.innerText = "查詢剩餘課程";
     }
+}
 </script>
 </body>
 </html>
