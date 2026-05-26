@@ -117,31 +117,35 @@
 </div>
 
 <script>
-    // 請將這裡換成您 GAS 部署後的 Web App URL (結尾為 /exec)
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec"; // 請務必填入您的真實連結
 
-    async function query() {
-    const btn = document.getElementById('btn');
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
-    
-    // 將參數透過 URL 傳遞，避開 POST 的跨域限制
-    const url = `${GAS_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
-    
-    btn.innerText = "查詢中...";
-    try {
-        const response = await fetch(url); // 改用 GET
-        const data = await response.json();
+    function query() {
+        const btn = document.getElementById('btn');
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
         
-        document.getElementById('count').innerText = data.remaining;
-        document.getElementById('date').innerText = data.expiry;
-        document.getElementById('result').style.display = "block";
-    } catch(e) {
-        alert("查詢失敗，請檢查網路");
-    } finally {
-        btn.innerText = "查詢剩餘課程";
+        btn.innerText = "查詢中...";
+
+        // 使用 JSONP 方式：動態加入 script 標籤，這不受 CORS 限制
+        const script = document.createElement('script');
+        script.src = `${GAS_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&callback=handleResponse`;
+        document.body.appendChild(script);
+
+        // 定義回呼函數
+        window.handleResponse = function(data) {
+            document.getElementById('count').innerText = data.remaining;
+            document.getElementById('date').innerText = data.expiry;
+            document.getElementById('result').style.display = "block";
+            btn.innerText = "查詢剩餘課程";
+            document.body.removeChild(script); // 清除標籤
+        };
+        
+        // 錯誤處理 (如果 script 載入失敗)
+        script.onerror = function() {
+            alert("查詢失敗，請檢查網路連線");
+            btn.innerText = "查詢剩餘課程";
+        };
     }
-}
 </script>
 </body>
 </html>
