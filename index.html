@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MT DANCE STUDIO | 學員查詢系統</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-cyan: #00f0ff;
             --neon-pink: #ff4081;
             --bg-dark: #0a192f;
         }
-        body { background: var(--bg-dark); color: white; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; }
-        .container { width: 100%; max-width: 400px; text-align: center; }
+        body { 
+            background: var(--bg-dark); color: white; display: flex; 
+            justify-content: center; padding: 25px; 
+            font-family: 'Noto Sans TC', sans-serif; min-height: 100vh;
+        }
+        .container { width: 100%; max-width: 450px; text-align: center; }
         
-        /* LOGO 設計 */
+        /* LOGO */
         .logo-main { 
-            font-size: 60px; font-weight: 900; 
+            font-size: 72px; font-weight: 900; 
             background: linear-gradient(to right, #ffffff, var(--neon-cyan));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .logo-sub { font-size: 16px; color: var(--neon-pink); letter-spacing: 4px; margin-bottom: 30px; }
-        h2 { font-size: 18px; color: #fff; margin-bottom: 20px; font-weight: 400; }
+        .logo-sub { font-size: 20px; color: var(--neon-pink); letter-spacing: 6px; margin-bottom: 40px; font-weight: 700; }
+        h2 { font-size: 22px; color: #fff; margin-bottom: 25px; font-weight: 400; }
 
         /* 輸入框與按鈕 */
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #172a45; color: white; }
-        button { width: 100%; padding: 12px; margin-top: 15px; background: var(--neon-cyan); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        input { 
+            width: 100%; padding: 18px; margin: 10px 0; border-radius: 12px; 
+            border: 1px solid #333; background: #172a45; color: white; 
+            font-size: 18px; text-align: center; box-sizing: border-box;
+        }
+        button { 
+            width: 100%; padding: 20px; margin-top: 20px; 
+            background: var(--neon-cyan); color: #000; border: none; 
+            border-radius: 12px; font-weight: bold; font-size: 20px; cursor: pointer; 
+        }
 
-        /* 查詢結果區 */
-        #result { margin-top: 30px; padding: 20px; border: 1px solid #333; border-radius: 12px; display: none; }
-        .result-label { font-size: 16px; margin: 10px 0; }
-        .count-val { font-size: 48px; color: var(--neon-cyan); font-weight: 900; }
-        .date-val { color: var(--neon-pink); font-weight: bold; }
+        /* 查詢結果區 (初始隱藏) */
+        #result { 
+            margin-top: 40px; padding: 30px; border: 2px solid var(--neon-cyan); 
+            border-radius: 20px; display: none; background: rgba(255,255,255,0.05);
+        }
+        .result-label { font-size: 20px; margin: 15px 0; color: #cbd5e1; }
+        .count-val { font-size: 64px; color: var(--neon-cyan); font-weight: 900; margin: 10px 0; display: block; text-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+        .date-val { color: var(--neon-pink); font-weight: bold; font-size: 24px; }
     </style>
 </head>
 <body>
@@ -53,7 +67,9 @@
 </div>
 
 <script>
-    // 您的 JSONP 請求函數保持不變
+    // 1. 請填入您 GAS 的網址
+    const GAS_API_URL = "您的_GAS_WEB_APP_URL"; 
+
     function sendJsonpRequest(url, callbackName) {
         return new Promise((resolve) => {
             window[callbackName] = (data) => {
@@ -71,22 +87,31 @@
         const btn = document.getElementById('btn');
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
-        if (!name || !phone) { alert("請填寫資料"); return; }
+        const resultDiv = document.getElementById('result');
+
+        if (!name || !phone) { alert("請完整輸入姓名與手機末三碼"); return; }
 
         btn.innerText = "查詢中...";
-        // 記得將您的 URL 換上去
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec"; 
-        const url = `${GAS_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
-        const data = await sendJsonpRequest(url, "jsonp_" + Date.now());
+        btn.disabled = true;
 
-        if (data.status === "success") {
-            document.getElementById('result').style.display = 'block';
-            document.getElementById('count').innerText = data.remaining;
-            document.getElementById('date').innerText = data.expiry;
-        } else {
-            alert("查無此學員");
+        try {
+            const url = `${GAS_API_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
+            const data = await sendJsonpRequest(url, "jsonp_" + Date.now());
+
+            if (data.status === "success") {
+                resultDiv.style.display = 'block';
+                document.getElementById('count').innerText = data.remaining;
+                document.getElementById('date').innerText = data.expiry;
+            } else {
+                resultDiv.style.display = 'none';
+                alert("查無資料，請再確認姓名與手機末三碼");
+            }
+        } catch (err) {
+            alert("系統忙碌中，請稍後再試");
+        } finally {
+            btn.innerText = "查詢";
+            btn.disabled = false;
         }
-        btn.innerText = "查詢";
     }
 </script>
 </body>
