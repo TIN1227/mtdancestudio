@@ -7,66 +7,100 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --bg-color: #060d1a; 
-            --card-bg: rgba(16, 39, 74, 0.7); 
+            --bg-color: #0a192f; 
+            --card-bg: rgba(16, 39, 74, 0.65); 
             --neon-cyan: #00f0ff; 
-            --text-color: #ffffff; 
+            --neon-pink: #ff4081; 
+            --text-color: #f8fafc; 
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans TC', sans-serif; }
-
         body { 
-            background: radial-gradient(circle at center, #1a2a44 0%, #060d1a 100%); 
+            background: linear-gradient(135deg, #060d1a 0%, #0a192f 100%); 
+            color: var(--text-color); 
+            font-family: 'Montserrat', 'Noto Sans TC', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
             min-height: 100vh; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            padding: 20px; 
-            color: var(--text-color);
         }
+
+       /* 背景霓虹光暈裝飾 */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.4;
+        }
+       body::before { top: -50px; left: -50px; background: var(--primary-blue); }
+       body::after { bottom: -50px; right: -50px; background: var(--neon-pink); }
 
         .container { 
-            width: 100%; 
-            max-width: 400px; 
+            width: 95%; 
+            max-width: 480px; 
             background: var(--card-bg); 
-            backdrop-filter: blur(10px);
-            border-radius: 20px; 
-            padding: 40px; 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 24px; 
+            padding: 40px 25px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); 
             text-align: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        h1 { margin-bottom: 25px; font-size: 24px; letter-spacing: 2px; color: var(--neon-cyan); }
+        /* 兩行式 Logo 設計 */
+        .logo-top { 
+            font-size: 70px; 
+            font-weight: 900; 
+            line-height: 1; 
+            background: linear-gradient(45deg, #ffffff, var(--neon-cyan)); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin-bottom: 5px; 
+        }
+        .logo-bottom { 
+            font-size: 18px; 
+            font-weight: 700; 
+            color: var(--neon-pink); 
+            letter-spacing: 8px; 
+            text-transform: uppercase; 
+            margin-bottom: 35px; 
+        }
 
         input { 
             width: 100%; 
-            padding: 15px; 
+            padding: 18px; 
             margin: 10px 0; 
-            border-radius: 10px; 
-            border: 1px solid #334; 
-            background: #0a192f; 
-            color: white; 
-            font-size: 16px;
+            background: rgba(15, 23, 42, 0.6); 
+            border: 2px solid #1e293b; 
+            border-radius: 12px; 
+            color: #fff; 
+            font-size: 18px; 
+            outline: none; 
+            box-sizing: border-box; 
         }
-
+        
         button { 
             width: 100%; 
-            padding: 15px; 
+            padding: 18px; 
             margin-top: 20px; 
-            border-radius: 10px; 
             border: none; 
-            background: var(--neon-cyan); 
-            color: #060d1a; 
-            font-weight: bold; 
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
+            border-radius: 12px; 
+            font-size: 18px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            background: linear-gradient(45deg, #0056b3, var(--neon-cyan)); 
+            color: white; 
+            transition: 0.3s; 
         }
-
-        button:hover { opacity: 0.9; transform: scale(1.02); }
-
-        #result { margin-top: 25px; padding: 20px; border-top: 1px solid #2d3748; display: none; }
+        
+        #result { display: none; margin-top: 30px; border: 1px dashed var(--neon-cyan); padding: 20px; border-radius: 16px; text-align: left; }
+        .info { font-size: 16px; margin: 10px 0; }
+        .val { font-size: 28px; font-weight: 900; color: var(--neon-cyan); display: block; }
     </style>
 </head>
 <body>
