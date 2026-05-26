@@ -117,34 +117,53 @@
 </div>
 
 <script>
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec"; // 請務必填入您的真實連結
+    // 1. 請填入您的 Google Apps Script Web App URL
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyNNNRJK1duf5WLOEk-8UL2Q1JzDLzOyDv2u8BQd8SbAkzNKGrQyXTYTom4CKlzUSD7XA/exec";
 
-    function query() {
+    // JSONP 請求核心函數
+    function sendJsonpRequest(url, callbackName) {
+        return new Promise((resolve, reject) => {
+            window[callbackName] = (data) => {
+                delete window[callbackName];
+                document.body.removeChild(script);
+                resolve(data);
+            };
+            const script = document.createElement('script');
+            script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    }
+
+    async function query() {
         const btn = document.getElementById('btn');
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
-        
+
+        if (!name || !phone) { alert("請完整輸入姓名與手機末三碼"); return; }
+
         btn.innerText = "查詢中...";
+        btn.disabled = true;
 
-        // 使用 JSONP 方式：動態加入 script 標籤，這不受 CORS 限制
-        const script = document.createElement('script');
-        script.src = `${GAS_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&callback=handleResponse`;
-        document.body.appendChild(script);
+        try {
+            // 呼叫 JSONP (網址帶參數)
+            const url = `${GAS_API_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
+            const data = await sendJsonpRequest(url, "jsonp_query_" + Date.now());
 
-        // 定義回呼函數
-        window.handleResponse = function(data) {
-            document.getElementById('count').innerText = data.remaining;
-            document.getElementById('date').innerText = data.expiry;
-            document.getElementById('result').style.display = "block";
+            if (data.status === "success") {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('count').innerText = data.remaining;
+                document.getElementById('date').innerText = data.expiry;
+            } else {
+                alert("查無資料，請洽櫃檯");
+                document.getElementById('result').style.display = 'none';
+            }
+        } catch (err) {
+            alert("伺服器連線異常，請稍後再試");
+        } finally {
             btn.innerText = "查詢剩餘課程";
-            document.body.removeChild(script); // 清除標籤
-        };
-        
-        // 錯誤處理 (如果 script 載入失敗)
-        script.onerror = function() {
-            alert("查詢失敗，請檢查網路連線");
-            btn.innerText = "查詢剩餘課程";
-        };
+            btn.disabled = false;
+        }
     }
 </script>
 </body>
